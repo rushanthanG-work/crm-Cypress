@@ -1,0 +1,24 @@
+[
+  {
+    "firstname": "Test1",
+    "lastname": "Create1",
+    "Address": "Automated Address",
+    "Email": "auto2@gmail.com",
+    "JobTitle": "Automated Job",
+    "Company": "Twist Digital",
+    "Status": "",
+    "Campaign": "Automated Campaign",
+    "Source": "Automated Source",
+    "PhoneNumber": "94112233447"
+  },
+  {
+    "Edited_firstname": "Test2",
+    "Edited_lastname": "Create2",
+    "Edited_Address": "Automated Address",
+    "Edited_Email": "autoEdited2@gmail.com",
+    "Edited_JobTitle": "Automated Job",
+    "Edited_Campaign": "Edited Campaign",
+    "Edited_Source": "Edited Source",
+    "Edited_PhoneNumber": "94112233448"
+  }
+]
