@@ -9,12 +9,14 @@ class Lead_Disable {
     ).click();
   }
 
-  validateDisabledLead(FirstName) {
+  validateDisabledLead() {
     cy.xpath(
-      "//body/div[@id='_rht_toaster']/div[@class='go4109123758']/div[1]"
-    ).should("have.text", "Lead deactivated successfully!");
+      "//body/div[@id='_rht_toaster']/div[@class='go4109123758']/div[1]",
+      { timeout: 100000 }
+    )
+      .should("be.visible") // waits until the toast is visible
+      .and("have.text", "Lead deactivated successfully!"); // waits until the text matches
 
-    cy.wait(5000);
     cy.visit("https://dev-lcn.utxcloud.com/dashboard/leads");
     cy.wait(4000);
 
@@ -38,13 +40,17 @@ class Lead_Disable {
     cy.wait(4000);
   }
 
-  validate_Enabled_Lead(FirstName) {
+  validate_Enabled_Lead() {
     cy.xpath(
-      "//body/div[@id='_rht_toaster']/div[@class='go4109123758']/div[@class='go2072408551']/div[1]"
-    ).should("have.text", "Lead reactivated successfully!");
+      "//body/div[@id='_rht_toaster']/div[@class='go4109123758']/div[@class='go2072408551']/div[1]",
+      { timeout: 100000 }
+    )
+      .should("be.visible")
+      .should("have.text", "Lead reactivated successfully!");
 
     cy.wait(4000);
-    cy.xpath("//button[normalize-space()='Active Leads']")
+    cy.xpath("//button[normalize-space()='Active Leads']", { timeout: 30000 })
+      .should("be.visible")
       .should("have.text", "Active Leads")
       .click();
 

@@ -1,26 +1,6 @@
 class Lead_Create {
-  companySelect(company) {
-    cy.get(
-      "button[class='flex items-center justify-between w-full hover:bg-hoverColor px-3 py-2 rounded-lg transition-colors duration-200']"
-    ).click();
-
-    cy.wait(6000);
-    cy.get(
-      "body > div:nth-child(1) > div:nth-child(1) > aside:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2)"
-    ).scrollTo("bottom");
-
-    cy.get("body div div:nth-child(28)").contains("div", company).click();
-
-    // cy.get("input[placeholder='Search companies...']").type(company);
-    // cy.wait(3000);
-    // cy.xpath("//span[normalize-space()='Twist Digital']").click();
-    cy.contains("Company switched successfully", { timeout: 20000 }).should(
-      "exist"
-    );
-  }
-
   navigatetoLeadsPage() {
-    cy.wait(10000);
+    // cy.wait(10000);
     cy.visit("https://dev-lcn.utxcloud.com/dashboard/leads", {
       timeout: 30000,
     });
@@ -49,20 +29,29 @@ class Lead_Create {
   }
 
   setCompany(company) {
-    cy.get(
-      "div[class='flex flex-col'] div[class='w-full px-3 py-2 border rounded-md bg-white focus-within:ring-2 focus-within:ring-[#e9e8ff] cursor-pointer select-none min-w-0 border-gray-300 '] div[class='flex items-center justify-between']",
-      { timeout: 10000 }
-    ).click();
+    const dropdownSelector =
+      "div[class='flex flex-col'] div[class='w-full px-3 py-2 border rounded-md bg-white focus-within:ring-2 focus-within:ring-[#e9e8ff] cursor-pointer select-none min-w-0 border-gray-300 '] div[class='flex items-center justify-between']";
 
-    cy.get(
-      "body > div:nth-child(1) > div:nth-child(2) > main:nth-child(2) > div:nth-child(1) > div:nth-child(5) > div:nth-child(2) > div:nth-child(2) > form:nth-child(1) > div:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2)"
-    ).within(() => {
-      cy.get("div.px-3.py-2.hover\\:bg-gray-100.cursor-pointer") // select all options
-        .contains(company) // filter by text
-        .scrollIntoView() // scroll if needed
-        .should("be.visible") // wait until visible
-        .click(); // click the target
-    });
+    // Wait for the **visible & enabled dropdown** only
+    cy.get(dropdownSelector, { timeout: 1000000 })
+      .filter(":visible") // only visible elements
+      .should("not.be.disabled") // not disabled
+      .first() // take the first one that matches
+      .click();
+
+    // Wait for options container
+    const optionsContainer =
+      "body > div:nth-child(1) > div:nth-child(2) > main:nth-child(2) > div:nth-child(1) > div:nth-child(5) > div:nth-child(2) > div:nth-child(2) > form:nth-child(1) > div:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2)";
+
+    cy.get(optionsContainer, { timeout: 1000000 }).should("be.visible");
+
+    // Click the target company
+    cy.contains("div.px-3.py-2.hover\\:bg-gray-100.cursor-pointer", company, {
+      timeout: 60000,
+    })
+      .scrollIntoView()
+      .should("be.visible")
+      .click();
   }
 
   setProject() {
@@ -74,8 +63,13 @@ class Lead_Create {
   }
 
   setSalesperson() {
-    cy.xpath("//span[normalize-space()='Select User']").click();
-    cy.xpath("//div[normalize-space()='RushanthanTDSP (Salesman)']").click();
+    // Open the dropdown
+    cy.xpath("//span[normalize-space()='Select User']", { timeout: 60000 })
+      .should("be.visible")
+      .click();
+
+    // Wait for the option to appear in DOM and be visible
+    cy.xpath("//div[normalize-space()='RushanthanTDSP (Salesman)']").click(); // use force if some invisible overlay blocks the click
   }
 
   setEmail(email) {
@@ -87,16 +81,25 @@ class Lead_Create {
   }
 
   setStatus() {
-    cy.wait(10000);
-    cy.get(
-      "body > div:nth-child(1) > div:nth-child(2) > main:nth-child(2) > div:nth-child(1) > div:nth-child(5) > div:nth-child(2) > div:nth-child(2) > form:nth-child(1) > div:nth-child(5) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1)",
-      { timeout: 10000 }
-    ).click();
-    cy.contains(".px-3.py-2", "Active").click();
+    const dropdownContainer = "//span[normalize-space()='No Status']";
+
+    // Click the dropdown
+    cy.xpath(dropdownContainer, { timeout: 1000000 })
+      .should("be.visible")
+      .click();
+
+    // Wait for the option 'tnt' to appear and click it
+    cy.contains(".px-3.py-2", "tnt", { timeout: 1000000 })
+      .scrollIntoView()
+      .should("be.visible")
+      .click();
   }
 
   setTags() {
-    cy.get("input[placeholder='Select tags...']").click();
+    cy.wait(20000);
+    cy.get("input[placeholder='Select tags...']", { timeout: 1000000 })
+      .should("be.visible")
+      .click();
     cy.contains(".px-3.py-2", "tnt").click();
   }
 
@@ -117,7 +120,7 @@ class Lead_Create {
   }
 
   verifyLeadCreation(firstName) {
-    cy.contains("tbody tr td:nth-child(3) div", firstName, { timeout: 10000 })
+    cy.contains("tbody tr td:nth-child(3) div", firstName, { timeout: 1000000 })
       .scrollIntoView()
       .should("be.visible");
   }

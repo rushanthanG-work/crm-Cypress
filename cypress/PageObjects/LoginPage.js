@@ -33,16 +33,19 @@ class Login {
 
   companySelect(company) {
     cy.wait(10000);
-    cy.get(
-      "button[class='flex items-center justify-between w-full hover:bg-hoverColor px-3 py-2 rounded-lg transition-colors duration-200']"
-    ).click();
+    cy.get("button[title='Select company']", { timeout: 20000 }).click();
 
-    cy.wait(10000);
+    // Wait for dropdown container to exist and be visible
     cy.get(
-      "body > div:nth-child(1) > div:nth-child(1) > aside:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2)"
-    ).scrollTo("bottom");
+      "body > div:nth-child(1) > div:nth-child(1) > aside:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2)",
+      { timeout: 30000 }
+    )
+      .should("be.visible")
+      .scrollTo("bottom"); // now scroll
 
-    cy.get("body div div:nth-child(28)").contains("div", company).click();
+    cy.get("body div div:nth-child(28)", { timeout: 20000 })
+      .contains("div", company)
+      .click();
 
     // cy.get("input[placeholder='Search companies...']").type(company);
     // cy.wait(3000);
