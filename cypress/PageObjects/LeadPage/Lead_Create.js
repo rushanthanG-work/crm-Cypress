@@ -54,12 +54,14 @@ class Lead_Create {
       .click();
   }
 
-  setProject() {
+  setProject(project) {
     cy.get(
       "body > div:nth-child(1) > div:nth-child(2) > main:nth-child(2) > div:nth-child(1) > div:nth-child(5) > div:nth-child(2) > div:nth-child(2) > form:nth-child(1) > div:nth-child(4) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1)"
     ).click();
 
-    cy.xpath("//div[normalize-space()='limited-collection']").click();
+    cy.get(".px-3.py-2.hover\\:bg-gray-100.cursor-pointer")
+      .contains(project)
+      .click();
   }
 
   setSalesperson() {
@@ -96,7 +98,6 @@ class Lead_Create {
   }
 
   setTags() {
-    cy.wait(20000);
     cy.get("input[placeholder='Select tags...']", { timeout: 1000000 })
       .should("be.visible")
       .click();
@@ -120,7 +121,30 @@ class Lead_Create {
   }
 
   verifyLeadCreation(firstName) {
-    cy.contains("tbody tr td:nth-child(3) div", firstName, { timeout: 1000000 })
+    // 1️⃣ Intercept the POST request that creates a lead
+    cy.intercept("POST", "https://dev-lcn.utxcloud.com/api/leads").as(
+      "createLead"
+    );
+
+    // 2️⃣ Click the create/submit button
+    cy.get(
+      "button[class='w-full px-4 py-3 border border-gray-300 bg-white text-gray-700 rounded-md hover:bg-gray-100 transition']",
+      { timeout: 100000 }
+    )
+      .should("be.visible")
+      .click();
+
+    // 3️⃣ Wait for the POST request to complete
+    cy.wait("@createLead", { timeout: 30000 })
+      .its("response.statusCode")
+      .should("be.oneOf", [200, 201]);
+
+    // 4️⃣ Visit the Leads page and verify the new lead is visible
+    cy.visit("https://dev-lcn.utxcloud.com/dashboard/leads", {
+      timeout: 30000,
+    });
+
+    cy.contains("tbody tr td:nth-child(3) div", firstName, { timeout: 100000 })
       .scrollIntoView()
       .should("be.visible");
   }

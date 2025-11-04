@@ -12,19 +12,23 @@ class Lead_Edit {
   }
 
   editLastName(editedLastName) {
-    cy.xpath("//input[@name='lastName']").click().type(editedLastName);
+    cy.xpath("//input[@name='lastName']").click().clear().type(editedLastName);
   }
 
   editEmail(editedEmail) {
     cy.xpath("//input[@name='email']").click().clear().type(editedEmail);
   }
 
-  editProject_hillsandsee() {
-    cy.xpath(
-      "//div[@data-error-field='project']//div[@class='flex items-center justify-between']"
+  editProject(project) {
+    // Open the dropdown
+    cy.get(
+      "body > div:nth-child(1) > div:nth-child(2) > main:nth-child(2) > div:nth-child(1) > div:nth-child(5) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > form:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1)"
     ).click();
 
-    cy.xpath("//div[normalize-space()='hillsandsea']").click();
+    // Select the matching project dynamically by text
+    cy.get(".px-3.py-2.hover\\:bg-gray-100.cursor-pointer")
+      .contains(project)
+      .click();
   }
 
   EditPhoneNumber(editedPhoneNumber) {
@@ -40,9 +44,9 @@ class Lead_Edit {
   }
 
   verifyLeadEdit(editedFirstName) {
-    cy.contains("tbody tr td:nth-child(3) div", editedFirstName).should(
-      "be.visible"
-    );
+    cy.contains("tbody tr td:nth-child(3) div", editedFirstName, {
+      timeout: 1000000,
+    }).should("be.visible");
   }
 }
 export default Lead_Edit;

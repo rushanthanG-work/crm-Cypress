@@ -1,6 +1,11 @@
 class Lead_Disable {
-  openViewModal() {
-    cy.get("tbody tr:nth-child(1) td:nth-child(3) div:nth-child(1)").click();
+  openViewModal(firstName) {
+    cy.get("tbody tr:nth-child(1) td:nth-child(3) div:nth-child(1)", {
+      timeout: 100000,
+    })
+      .should("be.visible")
+      .should("include.text", firstName)
+      .click();
   }
 
   clickDisableButton() {
@@ -18,9 +23,11 @@ class Lead_Disable {
       .and("have.text", "Lead deactivated successfully!"); // waits until the text matches
 
     cy.visit("https://dev-lcn.utxcloud.com/dashboard/leads");
-    cy.wait(4000);
 
-    cy.xpath("//button[normalize-space()='Deactivated Leads']")
+    cy.xpath("//button[normalize-space()='Deactivated Leads']", {
+      timeout: 100000,
+    })
+      .should("be.visible")
       .should("have.text", "Deactivated Leads")
       .click();
 
@@ -37,10 +44,9 @@ class Lead_Disable {
     cy.get("div.flex.items-center.gap-1.bg-gray-100 button[type='button']")
       .first()
       .click();
-    cy.wait(4000);
   }
 
-  validate_Enabled_Lead() {
+  validate_Enabled_Lead(FirstName) {
     cy.xpath(
       "//body/div[@id='_rht_toaster']/div[@class='go4109123758']/div[@class='go2072408551']/div[1]",
       { timeout: 100000 }
@@ -48,16 +54,17 @@ class Lead_Disable {
       .should("be.visible")
       .should("have.text", "Lead reactivated successfully!");
 
-    cy.wait(4000);
-    cy.xpath("//button[normalize-space()='Active Leads']", { timeout: 30000 })
+    cy.xpath("//button[normalize-space()='Active Leads']", { timeout: 100000 })
+      .scrollIntoView()
       .should("be.visible")
       .should("have.text", "Active Leads")
       .click();
 
-    // cy.get("tbody tr:nth-child(1) td:nth-child(3) div:nth-child(1)").should(
-    //   "have.text",
-    //   FirstName
-    // );
+    cy.get("tbody tr:nth-child(1) td:nth-child(3) div:nth-child(1)", {
+      timeout: 100000,
+    })
+      .should("be.visible")
+      .should("include.text", FirstName);
   }
 }
 export default Lead_Disable;
