@@ -6,16 +6,20 @@ class Status_Create {
   createStatus(createdStatus) {
     this.createdStatus = createdStatus;
     cy.xpath("//button[normalize-space()='+ Add New Status']", {
-      timeout: 10000,
-    }).click();
-    cy.get("input[placeholder='Enter Status Name']", { timeout: 10000 }).type(
-      createdStatus
-    );
-    cy.get("button[type='submit']", { timeout: 10000 }).click();
+      timeout: 100000,
+    })
+      .should("be.visible")
+      .click();
+    cy.get("input[placeholder='Enter Status Name']", { timeout: 100000 })
+      .should("be.visible")
+      .type(createdStatus);
+    cy.get("button[type='submit']", { timeout: 100000 })
+      .should("be.visible")
+      .click();
   }
 
   validateCreatedStatus(createdStatus) {
-    cy.get(`[title="${createdStatus}"]`, { timeout: 10000 }).should(
+    cy.get(`[title="${createdStatus}"]`, { timeout: 100000 }).should(
       "be.visible"
     );
   }

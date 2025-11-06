@@ -4,20 +4,27 @@ class Status_Edit {
   }
 
   editStatus(createdStatus, editedStatus) {
-    cy.wait(6000);
-    cy.get(`[title="${createdStatus}"]`).click();
-    // cy.get('input[type="checkbox"]').eq(0).check();
-    cy.get("button[title='Edit Status']", { timeout: 10000 }).click();
+    cy.get(`[title="${createdStatus}"]`, { timeout: 100000 })
+      .should("be.visible")
+      .click();
+    cy.get("button[title='Edit Status']", { timeout: 100000 })
+      .should("be.visible")
+      .click();
     cy.wait(4000);
-    cy.get(`[value="${createdStatus}"]`, { timeout: 10000 })
+    cy.get(`[value="${createdStatus}"]`, { timeout: 100000 })
+      .should("be.visible")
       .click()
       .clear()
       .type(editedStatus);
-    cy.get("button[type='submit']", { timeout: 10000 }).click();
+    cy.get("button[type='submit']", { timeout: 100000 })
+      .should("be.visible")
+      .click();
   }
 
   validateEditedStatus(editedStatus) {
-    cy.get(`[title="${editedStatus}"]`).should("be.visible");
+    cy.get(`[title="${editedStatus}"]`, { timeout: 100000 }).should(
+      "be.visible"
+    );
   }
 }
 

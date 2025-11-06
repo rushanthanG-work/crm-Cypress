@@ -15,10 +15,9 @@ describe("Status CRUD", () => {
   it("Status Create", () => {
     cy.fixture("status").then((data) => {
       const status = data[0];
-      cy.wait(6000);
       SC.navigateToStatusPageandVerify();
       SC.createStatus(status.created_StatusName);
-      cy.wait(10000);
+      SC.validateCreatedStatus(status.created_StatusName);
     });
   });
 
@@ -26,16 +25,12 @@ describe("Status CRUD", () => {
     cy.fixture("status").then((data) => {
       const createdStatus = data[0];
       const editedStatus = data[1];
-      cy.wait(4000);
       SE.navigateToStatusPageandVerify();
-      cy.wait(4000);
       SE.editStatus(
         createdStatus.created_StatusName,
         editedStatus.Edited_StatusName
       );
-      cy.wait(10000);
       SE.validateEditedStatus(editedStatus.Edited_StatusName);
-      cy.wait(6000);
     });
   });
 });

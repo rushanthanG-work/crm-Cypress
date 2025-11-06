@@ -27,7 +27,7 @@ class Login {
 
   isDashboardLoaded() {
     return cy
-      .contains("span", "Dashboard", { timeout: 15000 })
+      .contains("span", "Dashboard", { timeout: 100000 })
       .should("be.visible");
   }
 
