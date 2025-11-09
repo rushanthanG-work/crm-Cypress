@@ -26,13 +26,9 @@ describe("Tags CRUD", () => {
     cy.fixture("tags").then((data) => {
       const createdTag = data[0];
       const editedTag = data[1];
-      cy.wait(4000);
       TE.navigateToTagsPageandVerify();
-      cy.wait(4000);
       TE.editTag(createdTag.created_TagName, editedTag.Edited_TagName);
-      cy.wait(10000);
       TE.validateEditedTag(editedTag.Edited_TagName);
-      cy.wait(6000);
     });
   });
 });

@@ -38,8 +38,11 @@ class Lead_Disable {
   }
 
   clickEnableButton() {
-    cy.get("tbody tr:nth-child(1) td:nth-child(3) div:nth-child(1)").click();
-    cy.wait(4000);
+    cy.get("tbody tr:nth-child(1) td:nth-child(3) div:nth-child(1)", {
+      timeout: 100000,
+    })
+      .should("be.visible")
+      .click();
 
     cy.get("div.flex.items-center.gap-1.bg-gray-100 button[type='button']")
       .first()

@@ -9,23 +9,29 @@ class Lead_Create {
     cy.contains("span[title='Lead Details']", "Lead Details", {
       timeout: 30000,
     }).should("be.visible");
+
+    return this;
   }
 
   openLeadCreateModal() {
     cy.xpath("//button[normalize-space()='Add New Lead']", {
       timeout: 10000,
     }).click();
+    return this;
   }
   setFirstname(firstName) {
     cy.get("input[placeholder='First Name']").type(firstName);
+    return this;
   }
 
   setLastname(lastName) {
     cy.get("input[placeholder='Last Name']").type(lastName);
+    return this;
   }
 
   setAddress(address) {
     cy.get("input[placeholder='Address']").type(address);
+    return this;
   }
 
   setCompany(company) {
@@ -52,6 +58,7 @@ class Lead_Create {
       .scrollIntoView()
       .should("be.visible")
       .click();
+    return this;
   }
 
   setProject(project) {
@@ -62,6 +69,7 @@ class Lead_Create {
     cy.get(".px-3.py-2.hover\\:bg-gray-100.cursor-pointer")
       .contains(project)
       .click();
+    return this;
   }
 
   setSalesperson() {
@@ -72,21 +80,35 @@ class Lead_Create {
 
     // Wait for the option to appear in DOM and be visible
     cy.xpath("//div[normalize-space()='RushanthanTDSP (Salesman)']").click(); // use force if some invisible overlay blocks the click
+    return this;
   }
 
   setEmail(email) {
-    cy.get("input[placeholder='Enter Email']").type(email);
+    cy.get("input[placeholder='Enter Email']", { timeout: 100000 })
+      .should("be.visible")
+      .type(email);
+    return this;
   }
 
   setJobTitle(job) {
-    cy.get("input[placeholder='Enter Job Title']").type(job);
+    cy.get("input[placeholder='Enter Job Title']", { timeout: 100000 })
+      .should("be.visible")
+      .type(job);
+    return this;
   }
 
   setStatus() {
-    const dropdownContainer = "//span[normalize-space()='No Status']";
+    // const dropdownContainer = "//span[normalize-space()='No Status']";
+    cy.get(".truncate.text-gray-400", { timeout: 1000000 }) // locate by class
+      .should("be.visible") // ensure it's visible
+      .should("contain.text", "No Status");
+    // ensure it contains the text
 
     // Click the dropdown
-    cy.xpath(dropdownContainer, { timeout: 1000000 })
+    cy.xpath(
+      "//span[contains(@class,'truncate text-gray-400')][normalize-space()='No Status']",
+      { timeout: 1000000 }
+    )
       .should("be.visible")
       .click();
 
@@ -95,6 +117,7 @@ class Lead_Create {
       .scrollIntoView()
       .should("be.visible")
       .click();
+    return this;
   }
 
   setTags() {
@@ -102,51 +125,61 @@ class Lead_Create {
       .should("be.visible")
       .click();
     cy.contains(".px-3.py-2", "tnt").click();
+    return this;
   }
 
   setSource(source) {
-    cy.get("input[placeholder='Enter Source']").type(source);
+    cy.get("input[placeholder='Enter Source']", { timeout: 100000 })
+      .should("be.visible")
+      .type(source);
+    return this;
   }
 
   setCampaign(campaign) {
-    cy.get("input[placeholder='Enter Campaign']").type(campaign);
+    cy.get("input[placeholder='Enter Campaign']", { timeout: 100000 })
+      .should("be.visible")
+      .type(campaign);
+    return this;
   }
 
   setPhoneNumber(phoneNumber) {
-    cy.get("input[placeholder='Enter phone number']").click().type(phoneNumber);
+    cy.get("input[placeholder='Enter phone number']", { timeout: 100000 })
+      .should("be.visible")
+      .click()
+      .type(phoneNumber);
+    return this;
   }
 
   clickSubmit() {
+    cy.intercept("POST", "**/api/leads").as("createLead");
     cy.get("button[type='submit']").click();
+    cy.wait("@createLead", { timeout: 100000 })
+      .its("response.statusCode")
+      .should("be.oneOf", [200, 201]);
+    return this;
   }
 
-  verifyLeadCreation(firstName) {
-    // 1️⃣ Intercept the POST request that creates a lead
-    cy.intercept("POST", "https://dev-lcn.utxcloud.com/api/leads").as(
-      "createLead"
-    );
-
-    // 2️⃣ Click the create/submit button
+  //Only If Status Field is getting Selected
+  confirmAutomatedEmailPrompt() {
     cy.get(
-      "button[class='w-full px-4 py-3 border border-gray-300 bg-white text-gray-700 rounded-md hover:bg-gray-100 transition']",
+      "body > div:nth-child(1) > div:nth-child(2) > main:nth-child(2) > div:nth-child(1) > div:nth-child(5) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(3) > button:nth-child(1)",
       { timeout: 100000 }
     )
       .should("be.visible")
       .click();
+    return this;
+  }
 
-    // 3️⃣ Wait for the POST request to complete
-    cy.wait("@createLead", { timeout: 30000 })
-      .its("response.statusCode")
-      .should("be.oneOf", [200, 201]);
+  verifyLeadCreation(firstName) {
+    cy.visit("https://dev-lcn.utxcloud.com/dashboard/leads");
+    // Import Cypress XPath if not already
+    // require('cypress-xpath');
 
-    // 4️⃣ Visit the Leads page and verify the new lead is visible
-    cy.visit("https://dev-lcn.utxcloud.com/dashboard/leads", {
-      timeout: 30000,
-    });
+    cy.get(".block.text-ellipsis.whitespace-normal", { timeout: 100000 }) // correct class selector
+      .should("be.visible")
+      .should("contain", firstName); // assert that it contains the first name directly
 
-    cy.contains("tbody tr td:nth-child(3) div", firstName, { timeout: 100000 })
-      .scrollIntoView()
-      .should("be.visible");
+    return this;
   }
 }
 
