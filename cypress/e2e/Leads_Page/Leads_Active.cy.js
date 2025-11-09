@@ -2,7 +2,7 @@ import Lead_Create from "../../PageObjects/LeadPage/Lead_Create";
 import Lead_Disable from "../../PageObjects/LeadPage/Lead_Disable";
 import Lead_Edit from "../../PageObjects/LeadPage/Lead_Edit";
 import Login from "../../PageObjects/LoginPage";
-import { generateEditedLead } from "../../support/utils";
+
 const ln = new Login();
 const lc = new Lead_Create();
 const le = new Lead_Edit();
