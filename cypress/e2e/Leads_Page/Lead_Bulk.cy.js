@@ -16,6 +16,7 @@ describe("Leads Bulk", () => {
   //Lead Deactivate
   it("Lead Bulk Selection", { tags: ["smoke"] }, () => {
     lc.navigatetoLeadsPage();
-    lb.checkBulkLeadsOption();
+    lb.checkBulkLeadsOptionMin();
+    lb.ChangeBulkProject("hillsandsea");
   });
 });
