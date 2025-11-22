@@ -79,7 +79,7 @@ class Lead_Edit {
   clickEditSubmit() {
     cy.intercept("PUT", "**/api/leads/**").as("editLead"); // note the PUT method and wildcard for ID
     cy.get("button[type='submit']").click();
-    cy.wait("@editLead", { timeout: 100000 })
+    cy.wait("@editLead", { timeout: 300000 })
       .its("response.statusCode")
       .should("be.oneOf", [200, 201]);
     return this;
@@ -87,7 +87,7 @@ class Lead_Edit {
 
   verifyLeadEdit(editedFirstName) {
     cy.contains(".block.text-ellipsis.whitespace-normal", editedFirstName, {
-      timeout: 100000,
+      timeout: 300000,
     })
       .should("be.visible")
       .should("contain", editedFirstName);

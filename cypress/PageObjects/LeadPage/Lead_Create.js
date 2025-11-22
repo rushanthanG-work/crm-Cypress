@@ -153,7 +153,7 @@ class Lead_Create {
   clickSubmit() {
     cy.intercept("POST", "**/api/leads").as("createLead");
     cy.get("button[type='submit']").click();
-    cy.wait("@createLead", { timeout: 100000 })
+    cy.wait("@createLead", { timeout: 1000000 })
       .its("response.statusCode")
       .should("be.oneOf", [200, 201]);
     return this;

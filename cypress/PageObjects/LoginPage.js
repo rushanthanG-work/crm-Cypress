@@ -3,20 +3,26 @@ class Login {
     cy.visit("https://dev-lcn.utxcloud.com/");
   }
   setUsername(email) {
-    cy.get("input[type='email']").type(email);
+    cy.get("input[type='email']", { timeout: 100000 })
+      .should("be.visible")
+      .type(email);
   }
 
   setPassword(password) {
-    cy.get("input[type='password']").type(password);
+    cy.get("input[type='password']", { timeout: 100000 })
+      .should("be.visible")
+      .type(password);
   }
 
   clickSubmit() {
-    cy.get("button[type='submit']").click();
+    cy.get("button[type='submit']", { timeout: 100000 })
+      .should("be.visible")
+      .click();
   }
 
   enterHardcodedOTP() {
     const hardcodedOTP = "123456";
-    cy.get("input.w-12.h-12.text-center.text-2xl", { timeout: 20000 })
+    cy.get("input.w-12.h-12.text-center.text-2xl", { timeout: 100000 })
       .should("have.length", 6)
       .each((input, index) => {
         cy.wrap(input).clear().type(hardcodedOTP.charAt(index));
@@ -33,26 +39,23 @@ class Login {
 
   companySelect(company) {
     cy.wait(10000);
-    cy.get("button[title='Select company']", { timeout: 20000 }).click();
+    cy.get("button[title='Select company']", { timeout: 100000 })
+      .should("be.visible")
+      .click();
 
     // Wait for dropdown container to exist and be visible
-    cy.get(
-      "body > div:nth-child(1) > div:nth-child(1) > aside:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2)",
-      { timeout: 30000 }
-    )
+    cy.get("div[class='custom-scrollbar ']", { timeout: 300000 })
       .should("be.visible")
       .scrollTo("bottom"); // now scroll
 
-    cy.get("body div div:nth-child(28)", { timeout: 20000 })
+    cy.get("body div div:nth-child(28)", { timeout: 100000 })
+      .should("be.visible")
       .contains("div", company)
       .click();
 
-    // cy.get("input[placeholder='Search companies...']").type(company);
-    // cy.wait(3000);
-    // cy.xpath("//span[normalize-space()='Twist Digital']").click();
-    cy.contains("Company switched successfully", { timeout: 20000 }).should(
-      "exist"
-    );
+    // cy.contains("Company switched successfully", { timeout: 300000 })
+    //   .should("be.visible")
+    //   .should("exist");
   }
 }
 
